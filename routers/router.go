@@ -2,6 +2,7 @@ package routers
 
 import (
 	"ToDoList_Go/api"
+	v1 "ToDoList_Go/api/v1"
 	"ToDoList_Go/middleware/jwt"
 	"ToDoList_Go/pkg/setting"
 	"github.com/gin-contrib/cors"
@@ -38,11 +39,21 @@ func InitRouter() *gin.Engine {
 		})
 	})
 
-	r.POST("/api/login",api.Login)
+	r.POST("/api/login", api.Login)
 
-	route:=r.Group("/api",jwt.UserRequired())
+	route := r.Group("/api", jwt.UserRequired())
 	{
-		route.GET("/info",api.UserInfo)
+		// 用户
+		route.GET("/user/info", api.GetUserInfo)
+		route.POST("/user/info", api.UpdateUser)
+		route.POST("/user/avatar", api.UploadUserAvatar)
+
+		// 清单
+		route.GET("/lists", v1.GetAllList)
+		route.POST("/list", v1.AddList)
+		route.POST("list/:id", v1.UpdateList)
+		route.DELETE("/list/:id", v1.DeleteListById)
+
 	}
 
 	return r

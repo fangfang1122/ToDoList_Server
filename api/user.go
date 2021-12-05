@@ -6,17 +6,22 @@ import (
 	"ToDoList_Go/pkg/util"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"net/http"
+	"os"
+	"path"
 )
 
 type User struct {
-	Username   string `json:"username" binding:"required"`
-	Avatar string `json:"avatar"`
+	Username     string `json:"username" binding:"required"`
+	Avatar       string `json:"avatar"`
+	IsClickHeavy bool   `json:"is_click_heavy" "`
+	IsClickSound bool   `json:"is_click_sound" "`
 }
 
 func Login(c *gin.Context) {
 
-	var json struct{
+	var json struct {
 		Code string `json:"code" binding:"required,min=6"`
 	}
 
@@ -24,8 +29,8 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	ok,openid:=GetOpenId(c,json.Code)
-	if !ok{
+	ok, openid := GetOpenId(c, json.Code)
+	if !ok {
 		return
 	}
 	fmt.Println(openid)
@@ -49,35 +54,60 @@ func Login(c *gin.Context) {
 		"code": code,
 		"msg":  e.GetMsg(code),
 		"data": data,
+		"user": user,
 	})
 
 }
 
-func UserInfo(c *gin.Context) {
+func GetUserInfo(c *gin.Context) {
 	user := CurrentUser(c)
 	c.JSON(http.StatusOK, user)
 }
 
+func UploadUserAvatar(c *gin.Context) {
 
-func EditAuth(c *gin.Context) {
-	var json User
-	if !BindAndValid(c, &json) {
-		return
-	}
+	user := CurrentUser(c)
 
-	f, err := models.GetUserById(c.Param("id"))
+	name := uuid.New().String()
+	dst, err := UploadSingleFile(c, path.Join("avatar", name))
+	fmt.Println("dst", dst)
 	if err != nil {
 		ErrHandler(c, err)
 		return
 	}
 
-	n := models.User{
-		Username: json.Username,
-		Avatar: json.Avatar,
+	// 删除旧照片
+	if user.Avatar != "" {
+		if _, err = os.Stat(user.Avatar); err == nil {
+			_ = os.Remove(user.Avatar)
+		}
 	}
-	f.Update(&n)
-	c.JSON(http.StatusOK, f)
+
+	n := models.User{
+		Avatar: dst,
+	}
+	user.Update(&n)
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "success",
+		"url":     dst,
+		"data":    user,
+	})
 }
 
+func UpdateUser(c *gin.Context) {
+	var json User
+	if !BindAndValid(c, &json) {
+		return
+	}
 
+	user := CurrentUser(c)
 
+	n := models.User{
+		Username:     json.Username,
+		IsClickHeavy: json.IsClickHeavy,
+		IsClickSound: json.IsClickSound,
+	}
+	user.Update(&n)
+	c.JSON(http.StatusOK, user)
+}

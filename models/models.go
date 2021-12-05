@@ -39,7 +39,7 @@ func init() {
 	host = sec.Key("HOST").String()
 	//tablePrefix = sec.Key("TABLE_PREFIX").String()
 
-	db, err = gorm.Open(dbType, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
+	db, err = gorm.Open(dbType, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		user,
 		password,
 		host,
@@ -59,8 +59,9 @@ func init() {
 	db.DB().SetMaxIdleConns(10)
 	db.DB().SetMaxOpenConns(100)
 
-
 	db.AutoMigrate(&User{})
+	db.AutoMigrate(&List{})
+
 	//db.AutoMigrate(&Auth{})
 	//db.AutoMigrate(&Major{})
 	//db.AutoMigrate(&College{})
