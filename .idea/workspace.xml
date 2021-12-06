@@ -5,31 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b48f8986-8219-4e39-bb23-c995dfdeb6f8" name="变更" comment="">
-      <change afterPath="$PROJECT_DIR$/api/v1/task.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/TimeNormal.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/photo.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/upload.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/upload.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/v1/list.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/v1/list.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conf/app.ini" beforeDir="false" afterPath="$PROJECT_DIR$/conf/app.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/application.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/article.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/auth.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/college.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/department.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/file.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/file.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/fileType.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/list.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/list.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/major.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/models.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/models.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/sponsor.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/tag.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/task.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/task.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/team.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routers/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/routers/router.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tmp/build-errors.log" beforeDir="false" afterPath="$PROJECT_DIR$/tmp/build-errors.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tmp/main.exe" beforeDir="false" afterPath="$PROJECT_DIR$/tmp/main.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/main.exe" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
