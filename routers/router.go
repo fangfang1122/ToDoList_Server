@@ -52,8 +52,17 @@ func InitRouter() *gin.Engine {
 		route.GET("/lists", v1.GetAllList)
 		route.POST("/list", v1.AddList)
 		route.POST("list/:id", v1.UpdateList)
-		route.DELETE("/list/:id", v1.DeleteListById)
+		route.DELETE("/list/:id", v1.DeleteList)
 
+		// 清单
+		route.GET("/tasks", v1.GetTaskList)
+		route.POST("/task", v1.AddTask)
+		route.POST("task/:id", v1.UpdateTask)
+		route.DELETE("/task/:id", v1.DeleteTask)
+		route.POST("/task/:id/file", v1.UploadTaskFile)
+		route.POST("/task/:id/photo", v1.UploadTaskPhoto)
+		route.POST("/task/:id/finish", v1.FinishTask)
+		route.POST("/task/:id/cancel", v1.CancelTask)
 	}
 
 	return r

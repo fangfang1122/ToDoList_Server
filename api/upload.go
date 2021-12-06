@@ -2,8 +2,8 @@ package api
 
 import (
 	"ToDoList_Go/pkg/util"
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
 	"path"
 )
 
@@ -15,7 +15,7 @@ func UploadSingleFile(c *gin.Context, filePath string) (dst string, err error) {
 		return
 	}
 	// file.Filename SHOULD NOT be trusted.
-	log.Println(file.Filename)
+	fmt.Println(file.Filename)
 	//ext := filepath.Ext(file.Filename)
 	dst = path.Join("upload", filePath+"-"+file.Filename)
 	util.ExistsOrCreate(path.Dir(dst))

@@ -16,9 +16,9 @@ import (
 var db *gorm.DB
 
 type Model struct {
-	ID        uint      `json:"id" gorm:"primary_key"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID        uint       `json:"id" gorm:"primary_key"`
+	CreatedAt TimeNormal `gorm:"column:created_at;default:null" json:"created_at"`
+	UpdateAt  TimeNormal `gorm:"column:updated_at;default:null" json:"updated_at"`
 }
 
 func init() {
@@ -61,6 +61,9 @@ func init() {
 
 	db.AutoMigrate(&User{})
 	db.AutoMigrate(&List{})
+	db.AutoMigrate(&Task{})
+	db.AutoMigrate(&File{})
+	db.AutoMigrate(&Photo{})
 
 	//db.AutoMigrate(&Auth{})
 	//db.AutoMigrate(&Major{})

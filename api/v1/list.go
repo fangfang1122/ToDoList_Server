@@ -74,7 +74,7 @@ func UpdateList(c *gin.Context) {
 	c.JSON(http.StatusOK, f)
 }
 
-func DeleteListById(c *gin.Context) {
+func DeleteList(c *gin.Context) {
 	f, err := models.GetListById(c.Param("id"))
 	if err != nil {
 		api.ErrHandler(c, err)
@@ -87,6 +87,11 @@ func DeleteListById(c *gin.Context) {
 		})
 		return
 	}
+
+	n := models.User{
+		CreateListAmount: user.CreateListAmount - 1,
+	}
+	user.Update(&n)
 
 	if err = f.Delete(); err != nil {
 		api.ErrHandler(c, err)

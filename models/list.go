@@ -1,11 +1,7 @@
 package models
 
-import (
-	"github.com/jinzhu/gorm"
-)
-
 type List struct {
-	gorm.Model
+	Model
 	Name   string `json:"name" gorm:"not null"`
 	UserId uint   `json:"user_id" gorm:"not null,index"`
 	User   *User  `json:"user,omitempty" `
