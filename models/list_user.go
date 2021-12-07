@@ -6,12 +6,20 @@ type ListUser struct {
 	ListId uint  `json:"list_id"`
 	List   *List `json:"list"`
 	UserId uint  `json:"user_id"`
-	User   *User `json:"user"`
+	User   *User `json:"user,omitempty"`
 	IsJoin bool  `json:"is_join" gorm:"default:'0'"`
 }
 
 // GetAllCreateList 获取用户所有创建的清单
 func GetAllCreateList(UserID uint) (list []ListUser) {
+
+	result := db.Model(&List{}).Where("user_id = ? AND is_join = ? ", UserID, false).Preload("List") //Preload的话的跟结构体的一致哇，驼峰
+
+	result.Find(&list)
+	return
+}
+
+func GetAllCreateListWithTasks(UserID uint) (list []ListUser) {
 
 	result := db.Model(&List{}).Where("user_id = ? AND is_join = ? ", UserID, false).Preload("List") //Preload的话的跟结构体的一致哇，驼峰
 
