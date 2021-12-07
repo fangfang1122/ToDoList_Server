@@ -30,9 +30,7 @@ func GetTaskList(c *gin.Context) {
 func GetAllTask(c *gin.Context) {
 	user := api.CurrentUser(c)
 	data := models.GetAllTask(user.ID, c.Query("id"))
-	c.JSON(http.StatusOK, gin.H{
-		"data": data,
-	})
+	c.JSON(http.StatusOK, data)
 }
 
 func AddTask(c *gin.Context) {
@@ -58,9 +56,10 @@ func AddTask(c *gin.Context) {
 		return
 	}
 	n := models.User{
-		CreateListAmount: user.CreateListAmount + 1,
+		UnfinishedTaskAmount: user.UnfinishedTaskAmount + 1,
+		FinishedTaskAmount:   user.FinishedTaskAmount,
 	}
-	user.Update(&n)
+	user.UpdateTaskState(&n)
 	c.JSON(http.StatusOK, f)
 }
 
@@ -78,7 +77,7 @@ func UpdateTask(c *gin.Context) {
 	user := api.CurrentUser(c)
 	if f.UserId != user.ID {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"msg": "无法修改非自己创建的任务",
+			"message": "无法修改非自己创建的任务",
 		})
 		return
 	}
@@ -86,6 +85,7 @@ func UpdateTask(c *gin.Context) {
 		Name:        json.Name,
 		EndDate:     json.EndDate,
 		Description: json.Description,
+		Week:        json.Week,
 	}
 	f.Update(&n)
 	c.JSON(http.StatusOK, f)
@@ -100,20 +100,20 @@ func DeleteTask(c *gin.Context) {
 	user := api.CurrentUser(c)
 	if f.UserId != user.ID {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"msg": "无法删除非自己创建的任务",
+			"message": "无法删除非自己创建的任务",
 		})
 		return
 	}
 
 	//删除任务后用户的任务数量也得减
 	var n models.User
-	if f.FinishedDate.Year() == 1 {
+	if f.IsFinished {
 		n = models.User{
-			UnfinishedTaskAmount: user.UnfinishedTaskAmount - 1,
+			FinishedTaskAmount: user.FinishedTaskAmount - 1,
 		}
 	} else {
 		n = models.User{
-			FinishedTaskAmount: user.FinishedTaskAmount - 1,
+			UnfinishedTaskAmount: user.UnfinishedTaskAmount - 1,
 		}
 	}
 	user.Update(&n)
@@ -128,9 +128,8 @@ func DeleteTask(c *gin.Context) {
 }
 
 func FinishTask(c *gin.Context) {
-	var json struct {
+	var json struct { //其实这里应该后端处理，而不是前台发送，可惜目前我对go不是很熟悉，对时间的格式不了解
 		FinishedDate models.TimeNormal `json:"finished_date" binding:"required"`
-		EndDate      models.TimeNormal `json:"end_date" binding:"required"`
 	}
 	if !api.BindAndValid(c, &json) {
 		return
@@ -144,7 +143,7 @@ func FinishTask(c *gin.Context) {
 	user := api.CurrentUser(c)
 	if f.UserId != user.ID {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"msg": "无法完成非自己创建的任务",
+			"message": "无法完成非自己创建的任务",
 		})
 		return
 	}
@@ -155,12 +154,15 @@ func FinishTask(c *gin.Context) {
 		UnfinishedTaskAmount: user.UnfinishedTaskAmount - 1,
 		FinishedTaskAmount:   user.FinishedTaskAmount + 1,
 	}
-	user.Update(&n)
+	user.UpdateTaskState(&n)
+
+	if user.UnfinishedTaskAmount == 0 {
+
+	}
 
 	fn := models.Task{
 		IsFinished:   true,
 		FinishedDate: json.FinishedDate,
-		EndDate:      json.EndDate,
 	}
 	f.Update(&fn)
 	c.JSON(http.StatusOK, gin.H{
@@ -178,18 +180,18 @@ func CancelTask(c *gin.Context) {
 	user := api.CurrentUser(c)
 	if f.UserId != user.ID {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"msg": "无法取消非自己创建的任务",
+			"message": "无法取消非自己创建的任务",
 		})
 		return
 	}
 
-	//完成任务后用户的任务数量也得减
+	//取消任务后用户的任务数量也得减
 	var n models.User
 	n = models.User{
 		UnfinishedTaskAmount: user.UnfinishedTaskAmount + 1,
 		FinishedTaskAmount:   user.FinishedTaskAmount - 1,
 	}
-	user.Update(&n)
+	user.UpdateTaskState(&n)
 
 	f.CancelFinish()
 
@@ -209,7 +211,7 @@ func UploadTaskFile(c *gin.Context) {
 	user := api.CurrentUser(c)
 	if f.UserId != user.ID {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"msg": "无法编辑非自己创建的任务",
+			"message": "无法编辑非自己创建的任务",
 		})
 		return
 	}
@@ -261,7 +263,7 @@ func UploadTaskPhoto(c *gin.Context) {
 	user := api.CurrentUser(c)
 	if f.UserId != user.ID {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"msg": "无法编辑非自己创建的图片",
+			"message": "无法编辑非自己创建的图片",
 		})
 		return
 	}
@@ -293,4 +295,19 @@ func UploadTaskPhoto(c *gin.Context) {
 	f.Update(&n)
 
 	c.JSON(http.StatusOK, f)
+}
+
+func GetQRCode(c *gin.Context) {
+
+	ok, tokenData := api.GetAccessToken(c)
+	if !ok {
+		return
+	}
+	ok, bufferData := api.GetQRCode(c, tokenData["access_token"].(string))
+	if !ok {
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": bufferData,
+	})
 }

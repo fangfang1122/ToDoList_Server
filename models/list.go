@@ -4,7 +4,8 @@ type List struct {
 	Model
 	Name   string `json:"name" gorm:"not null"`
 	UserId uint   `json:"user_id" gorm:"not null,index"`
-	User   *User  `json:"user,omitempty" `
+	//TotalTask int    `json:"total_task" gorm:"not null,default:'0'"`   //算啦，该功能先不加，本来想记录该清单有多少任务的，多少完成，多少未完成
+	User *User `json:"user,omitempty" `
 }
 
 func GetAllList(UserID uint) (list []List) {

@@ -47,14 +47,21 @@ func InitRouter() *gin.Engine {
 		route.GET("/user/info", api.GetUserInfo)
 		route.POST("/user/info", api.UpdateUser)
 		route.POST("/user/avatar", api.UploadUserAvatar)
+		route.GET("/user/taskStatus", api.GetUserTaskStatus)
 
 		// 清单
-		route.GET("/lists", v1.GetAllList)
+		//route.GET("/lists", v1.GetAllList)  //返回的其实也是用户创建的所有清单列表
+		route.GET("/lists/create", v1.GetAllCreateList)
+		route.GET("/lists/join", v1.GetAllJoinList)
 		route.POST("/list", v1.AddList)
-		route.POST("list/:id", v1.UpdateList)
+		route.POST("/list/:id", v1.UpdateList)
 		route.DELETE("/list/:id", v1.DeleteList)
 
-		// 清单
+		// --> list_user
+		route.POST("/list/join", v1.AddJoinList) //加入清单
+		route.GET("/list/:list_id/members", v1.GetListUserByListId)
+
+		// 任务
 		route.GET("/tasks", v1.GetTaskList)
 		route.POST("/task", v1.AddTask)
 		route.POST("task/:id", v1.UpdateTask)
@@ -63,6 +70,8 @@ func InitRouter() *gin.Engine {
 		route.POST("/task/:id/photo", v1.UploadTaskPhoto)
 		route.POST("/task/:id/finish", v1.FinishTask)
 		route.POST("/task/:id/cancel", v1.CancelTask)
+		route.POST("/task/:id/QRCode", v1.GetQRCode)
+
 	}
 
 	return r

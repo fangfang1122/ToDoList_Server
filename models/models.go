@@ -59,24 +59,14 @@ func init() {
 	db.DB().SetMaxIdleConns(10)
 	db.DB().SetMaxOpenConns(100)
 
+	//自动迁移表
 	db.AutoMigrate(&User{})
 	db.AutoMigrate(&List{})
 	db.AutoMigrate(&Task{})
 	db.AutoMigrate(&File{})
 	db.AutoMigrate(&Photo{})
+	db.AutoMigrate(&ListUser{})
 
-	//db.AutoMigrate(&Auth{})
-	//db.AutoMigrate(&Major{})
-	//db.AutoMigrate(&College{})
-	//db.AutoMigrate(&Team{})
-	//db.AutoMigrate(&Department{})
-	//db.AutoMigrate(&Application{})
-	//db.AutoMigrate(&Sponsor{})
-	//db.AutoMigrate(&FileType{})
-	//db.AutoMigrate(&File{})
-	//
-	//db.AutoMigrate(&Article{})
-	//db.AutoMigrate(&Tag{})
 }
 
 type Pagination struct {

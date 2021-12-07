@@ -111,3 +111,17 @@ func UpdateUser(c *gin.Context) {
 	user.Update(&n)
 	c.JSON(http.StatusOK, user)
 }
+
+// GetUserTaskStatus 这里写的不好，太sb了，所以最好还是一开始后台初始化用户信息比较好
+func GetUserTaskStatus(c *gin.Context) {
+	user := CurrentUser(c)
+	var data struct {
+		CreateListAmount     int `json:"create_list_amount" `
+		UnfinishedTaskAmount int `json:"unfinished_task_amount" `
+		FinishedTaskAmount   int `json:"finished_task_amount" `
+	}
+	data.FinishedTaskAmount = user.FinishedTaskAmount
+	data.UnfinishedTaskAmount = user.UnfinishedTaskAmount
+	data.CreateListAmount = user.CreateListAmount
+	c.JSON(http.StatusOK, data)
+}

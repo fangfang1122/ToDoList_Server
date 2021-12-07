@@ -10,10 +10,10 @@ type Task struct {
 	UserId       uint       `json:"user_id" gorm:"not null,index"`
 	ListId       uint       `json:"list_id" gorm:"not null"`
 	List         *List      `json:"list,omitempty" `
-	EndDate      TimeNormal `json:"end_date" gorm:"default:'null'"`
+	EndDate      TimeNormal `json:"end_date"`
 	Week         int        `json:"week"`
-	IsFinished   bool       `json:"is_finished"`
-	FinishedDate TimeNormal `json:"finished_date" gorm:"default:'null'""`
+	IsFinished   bool       `json:"is_finished" gorm:"default:false"`
+	FinishedDate TimeNormal `json:"finished_date"`
 	Description  string     `json:"description"`
 	Files        []File     `json:"files"`
 	Photos       []Photo    `json:"photos"`
@@ -21,13 +21,22 @@ type Task struct {
 
 func GetTaskList(c *gin.Context, userId interface{}) (data *DataList) {
 	var list []Task
-	result := db.Model(&Task{})
+	result := db.Model(&Task{}).Preload("List").Preload("Files").Preload("Photos")
 
 	if c.Query("list_id") != "" {
 		result = result.Where("list_id=?", c.Query("list_id"))
 	}
 
-	result = result.Where("user_id=?", userId).Preload("Files").Preload("Photos")
+	if c.Query("is_finished") != "" {
+		if c.Query("is_finished") == "true" {
+			result = result.Where("is_finished=?", true)
+		}
+		if c.Query("is_finished") == "false" {
+			result = result.Where("is_finished=?", false)
+		}
+	}
+
+	result = result.Where("user_id=?", userId)
 
 	var total int64
 
@@ -43,7 +52,7 @@ func GetAllTask(UserID uint, ListID interface{}) (list []Task) {
 
 	result := db.Model(&Task{}).Where("user_id = ?", UserID).Where("list_id=?", ListID)
 
-	result.Find(&list)
+	result.Preload("Files").Preload("Photos").Find(&list)
 	return
 }
 
