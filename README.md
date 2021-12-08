@@ -34,7 +34,7 @@ ToDo 为我今年愿单之一，想自己学习且独立写一个前后端的软
 
 ## 2.部分页面
 
-![image-20211208140806922](C:\Users\HP\Desktop\project\todo-myslef\ToDoList_Server\images\image-20211208140806922-16389441360361.png)
+![image-20211208140806922](https://gitee.com/wx_a1fae56917/images/raw/master/TyporaImages/image-20211208140806922.png)
 
 ## 3.开发思路
 
