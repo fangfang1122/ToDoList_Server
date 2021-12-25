@@ -14,7 +14,7 @@
 
 1. 清单的创建及任务的发布
 2. 文件及图片的上传
-3. 清单小组的加入
+3. ~~清单小组的加入~~
 
 ### 说明：
 
@@ -36,7 +36,27 @@ ToDo 为我今年愿单之一，想自己学习且独立写一个前后端的软
 
 ![image-20211208140806922](https://gitee.com/wx_a1fae56917/images/raw/master/TyporaImages/image-20211208140806922.png)
 
-## 3.开发思路
+## 3.整体架构
 
-1. MVC
-
+```
+├──  api 路由API接口逻辑
+│   └── v1 第一版本API
+│   └── api.go 内部通用函数调用
+│   └── auth.go 管理员接口逻辑
+│   └── upload.go 文件上传封装
+│   └── validate.go JSON封装校验
+├──  conf 用于存储配置文件
+│	 └── app.ini 项目配置文件
+├── middleware 中间件
+├── models 应用数据库模型
+├── pkg 第三方包
+│	└── e 错误码包 (目前还没咋用，但很有必要)
+│ 	└── setting 项目配置包
+│ 	└── util 工具包
+├── routers 路由逻辑处理
+│ 	└── router.go
+├── upload 文件上传目录
+├── go.mod 描述直接依赖包
+├── go.sum 描述依赖树锁定
+├── main.go 主程序入口
+```
